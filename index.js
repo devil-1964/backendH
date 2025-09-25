@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const multer = require('multer');
 const cors = require('cors');
 const offerRoutes=require("./routes/offerRoute")
 const leadsRoutes=require("./routes/leadsRoute")
