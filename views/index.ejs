@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+
+        .personal-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .personal-links a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .endpoint {
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .endpoint-header {
+            margin-bottom: 10px;
+        }
+
+        .method {
+            background: #ffffff;
+            color: #000000;
+            padding: 4px 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #cccccc;
+            margin: 10px 0;
+        }
+
+        .example {
+            margin: 15px 0;
+        }
+
+        .example h4 {
+            color: #ffffff;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .code-block {
+            background: #111111;
+            color: #ffffff;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            margin: 15px 0;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .table th {
+            background: #333333;
+            color: #ffffff;
+        }
+
+        .table td {
+            color: #cccccc;
+            background: #111111;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature h3 {
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            color: #cccccc;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #cccccc;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .personal-links {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>API</h1>
+
+            <div class="personal-links">
+                <a href="https://drive.google.com/file/d/1JL61pFMunYHavWZlpVTjWf23YVecZFUP/view?usp=sharing" target="_blank">Resume</a>
+                <a href="https://github.com/devil-1964" target="_blank">GitHub</a>
+
+                <!-- link to video -->
+                <a href="https://youtube.com/your-channel" target="_blank">Demo Video</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>API Endpoints</h2>
+
+            <!-- POST /offer -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method">POST</span>
+                    <span class="endpoint-url">/offer</span>
+                </div>
+                <div class="description">
+                    Store offer details including product information, value propositions, and ideal use cases.
+                </div>
+                <div class="example">
+                    <h4>Request Body (JSON):</h4>
+                    <div class="code-block">{
+                        "name": "AI Outreach Automation",
+                        "value_props": ["24/7 outreach", "6x more meetings"],
+                        "ideal_use_cases": ["B2B SaaS mid-market"]
+                        }</div>
+                </div>
+                <div class="example">
+                    <h4>Response (JSON):</h4>
+                    <div class="code-block">{
+                        "success": true,
+                        "message": "Offer stored successfully",
+                        "data": {
+                        "id": 1642567890123,
+                        "name": "AI Outreach Automation",
+                        "value_props": ["24/7 outreach", "6x more meetings"],
+                        "ideal_use_cases": ["B2B SaaS mid-market"],
+                        "created_at": "2024-01-01T12:00:00.000Z"
+                        }
+                        }</div>
+                </div>
+            </div>
+
+            <!-- POST /leads/upload -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method">POST</span>
+                    <span class="endpoint-url">/leads/upload</span>
+                </div>
+                <div class="description">
+                    Upload a CSV file containing lead information. Required columns: name, role, company, industry,
+                    location, linkedin_bio.
+                </div>
+                <div class="example">
+                    <h4>Request (CSV Upload):</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>role</th>
+                                <th>company</th>
+                                <th>industry</th>
+                                <th>location</th>
+                                <th>linkedin_bio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>CEO</td>
+                                <td>TechCorp</td>
+                                <td>Technology</td>
+                                <td>San Francisco</td>
+                                <td>Tech entrepreneur with 10+ years experience</td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>VP Sales</td>
+                                <td>SalesForce</td>
+                                <td>Software</td>
+                                <td>New York</td>
+                                <td>Sales leader specializing in B2B solutions</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="example">
+                    <h4>Response (JSON):</h4>
+                    <div class="code-block">{
+                        "success": true,
+                        "message": "Successfully uploaded 2 leads",
+                        "data": {
+                        "leadsCount": 2,
+                        "leads": [
+                        {
+                        "id": 1642567890124,
+                        "name": "John Doe",
+                        "role": "CEO",
+                        "company": "TechCorp",
+                        "industry": "Technology",
+                        "location": "San Francisco",
+                        "linkedin_bio": "Tech entrepreneur with 10+ years experience",
+                        "created_at": "2024-01-01T12:01:00.000Z"
+                        }
+                        ]
+                        }
+                        }</div>
+                </div>
+            </div>
+
+            <!-- POST /score -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method">POST</span>
+                    <span class="endpoint-url">/score</span>
+                </div>
+                <div class="description">
+                    Process and score all uploaded leads using rule-based logic combined with AI reasoning. Requires
+                    both offers and leads to be uploaded first.
+                </div>
+                <div class="example">
+                    <h4>Response (JSON):</h4>
+                    <div class="code-block">{
+                        "success": true
+                        }</div>
+                </div>
+            </div>
+
+            <!-- GET /result -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method">GET</span>
+                    <span class="endpoint-url">/result</span>
+                </div>
+                <div class="description">
+                    Retrieve scored results for all processed leads with scores, intent classification, and reasoning.
+                </div>
+                <div class="example">
+                    <h4>Response (JSON):</h4>
+                    <div class="code-block">{
+                        "success": true,
+                        "scores": [
+                        {
+                        "name": "John Doe",
+                        "role": "CEO",
+                        "company": "TechCorp",
+                        "industry": "Technology",
+                        "location": "San Francisco",
+                        "ruleScore": 40,
+                        "aiScore": 50,
+                        "finalScore": 90,
+                        "intent": "High",
+                        "reasoning": "Perfect fit for B2B SaaS solution as CEO of tech company"
+                        },
+                        {
+                        "name": "Jane Smith",
+                        "role": "VP Sales",
+                        "company": "SalesForce",
+                        "industry": "Software",
+                        "location": "New York",
+                        "ruleScore": 30,
+                        "aiScore": 40,
+                        "finalScore": 70,
+                        "intent": "Medium",
+                        "reasoning": "Good fit as sales leader but not decision maker"
+                        }
+                        ]
+                        }</div>
+                </div>
+            </div>
+
+            <!-- GET /download -->
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method">GET</span>
+                    <span class="endpoint-url">/download</span>
+                </div>
+                <div class="description">
+                    Download the scored results as a CSV file for further analysis and reporting.
+                </div>
+                <div class="example">
+                    <h4>Response (CSV Download):</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>name</th>
+                                <th>role</th>
+                                <th>company</th>
+                                <th>industry</th>
+                                <th>finalScore</th>
+                                <th>intent</th>
+                                <th>reasoning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>CEO</td>
+                                <td>TechCorp</td>
+                                <td>Technology</td>
+                                <td>90</td>
+                                <td>High</td>
+                                <td>Perfect fit for B2B SaaS solution</td>
+                            </tr>
+                            <tr>
+                                <td>Jane Smith</td>
+                                <td>VP Sales</td>
+                                <td>SalesForce</td>
+                                <td>Software</td>
+                                <td>70</td>
+                                <td>Medium</td>
+                                <td>Good fit as sales leader</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="footer">
+            <p>Built using Node.js, Express.js, and Google Gemini API Integration</p>
+        </div>
+    </div>
+
+    <script>
+        // Simple JSON formatter without external libraries
+        function formatJSON(jsonString) {
+            try {
+                const obj = JSON.parse(jsonString);
+                return JSON.stringify(obj, null, 2);
+            } catch (e) {
+                return jsonString;
+            }
+        }
+
+        // Format all JSON blocks on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const codeBlocks = document.querySelectorAll('.code-block');
+            codeBlocks.forEach(function (block) {
+                const content = block.textContent.trim();
+                if (content.startsWith('{') || content.startsWith('[')) {
+                    block.textContent = formatJSON(content);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

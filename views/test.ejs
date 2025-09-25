@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API - Test Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 40px;
+        }
+        
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav a {
+            color: #ffffff;
+            text-decoration: underline;
+            margin: 0 10px;
+        }
+        
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        
+        input, button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        input {
+            background: #111111;
+            border: 1px solid #333333;
+            color: #ffffff;
+        }
+        
+        button {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: #cccccc;
+        }
+        
+        button:disabled {
+            background: #666666;
+            color: #999999;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: #111111;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .result.success {
+            background: #113311;
+            color: #88ff88;
+        }
+        
+        .result.error {
+            background: #331111;
+            color: #ff8888;
+        }
+        
+        .sample-format {
+            background: #111111;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .sample-format pre {
+            color: #cccccc;
+            font-size: 0.9em;
+        }
+        
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: #333333;
+            margin: 10px 0;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .loading-bar::before {
+            content: '';
+            display: block;
+            width: 0%;
+            height: 100%;
+            background: #ffffff;
+            animation: loading 2s ease-in-out infinite;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+        
+        .note {
+            background: #222222;
+            border: 1px solid #444444;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        
+        .note strong {
+            color: #ffffff;
+        }
+        
+        textarea {
+            background: #111111;
+            border: 1px solid #333333;
+            color: #ffffff;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            min-height: 120px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav a {
+                display: block;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="/">Back to Documentation</a>
+        <a href="/result">View Results</a>
+        <a href="/download">Download CSV</a>
+    </div>
+
+    <div class="note">
+        <strong>Note:</strong> Please complete steps in order: First store the offer (Step 1), then upload leads CSV (Step 2), then you can process and score the leads (Step 3).
+    </div>
+
+    <div class="container">
+        <h2>Step 1: Store Offer</h2>
+        <form id="offerForm">
+            <div class="form-group">
+                <label>Offer JSON:</label>
+                <textarea id="offerJson" placeholder='{"name": "AI Outreach Automation", "value_props": ["24/7 outreach", "6x more meetings"], "ideal_use_cases": ["B2B SaaS mid-market", "Enterprise sales"]}' required></textarea>
+            </div>
+            <button type="submit">Store Offer</button>
+        </form>
+        <div id="offerResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Step 2: Upload Leads CSV</h2>
+        <form id="leadsForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>CSV File (required columns: name, role, company, industry, location, linkedin_bio):</label>
+                <input type="file" id="csvFile" accept=".csv" required>
+            </div>
+            <button type="submit">Upload Leads</button>
+        </form>
+        <div id="leadsResult" class="result" style="display:none;"></div>
+        
+        <div class="sample-format">
+            <strong>Sample CSV format:</strong>
+            <pre>name,role,company,industry,location,linkedin_bio
+John Doe,CEO,TechCorp,Technology,San Francisco,Tech entrepreneur with 10+ years
+Jane Smith,VP Sales,SalesForce,Software,New York,Sales leader specializing in B2B</pre>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Step 3: Process & Score Leads</h2>
+        <button id="scoreBtn" onclick="scoreLeads()">Score All Leads</button>
+        <div class="loading-bar" id="loadingBar"></div>
+        <div id="scoreResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="container">
+        <h2>Step 4: View Results</h2>
+        <button id="resultsBtn" onclick="getResults()">Get Scored Results</button>
+        <div id="resultsDisplay" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        // Handle offer form submission
+        document.getElementById('offerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const offerText = document.getElementById('offerJson').value;
+                const offer = JSON.parse(offerText);
+
+                const response = await fetch('/offer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(offer)
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('offerResult');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+            } catch (error) {
+                const resultDiv = document.getElementById('offerResult');
+                resultDiv.style.display = 'block';
+                if (error instanceof SyntaxError) {
+                    resultDiv.textContent = 'Invalid JSON format. Please check your JSON syntax.';
+                } else {
+                    resultDiv.textContent = 'Error: ' + error.message;
+                }
+                resultDiv.className = 'result error';
+            }
+        });
+
+        // Handle leads form submission
+        document.getElementById('leadsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('csvFile');
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/leads/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('leadsResult');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+            } catch (error) {
+                const resultDiv = document.getElementById('leadsResult');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        });
+
+        // Score leads function
+        async function scoreLeads() {
+            try {
+                const response = await fetch('/score', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+                const resultDiv = document.getElementById('scoreResult');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+            } catch (error) {
+                const resultDiv = document.getElementById('scoreResult');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        // Score leads function with loading bar
+        async function scoreLeads() {
+            const loadingBar = document.getElementById('loadingBar');
+            const scoreBtn = document.getElementById('scoreBtn');
+            const resultDiv = document.getElementById('scoreResult');
+            
+            try {
+                // Show loading bar and disable button
+                loadingBar.style.display = 'block';
+                scoreBtn.disabled = true;
+                scoreBtn.textContent = 'Processing...';
+                resultDiv.style.display = 'none';
+
+                const response = await fetch('/score', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            } finally {
+                // Hide loading bar and re-enable button
+                loadingBar.style.display = 'none';
+                scoreBtn.disabled = false;
+                scoreBtn.textContent = 'Score All Leads';
+            }
+        }
+
+        // Get results function
+        async function getResults() {
+            try {
+                const response = await fetch('/result');
+                const result = await response.json();
+                const resultDiv = document.getElementById('resultsDisplay');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = JSON.stringify(result, null, 2);
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+            } catch (error) {
+                const resultDiv = document.getElementById('resultsDisplay');
+                resultDiv.style.display = 'block';
+                resultDiv.textContent = 'Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html>
